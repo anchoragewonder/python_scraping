@@ -9,13 +9,20 @@ request_page.close()
 
 html_soup = BeautifulSoup(page_html, 'html.parser')
 
-soccer_items = html_soup.find _all('div', class_="OcbAbf")
+soccer_items = html_soup.find_all('div', class_="OcbAbf")
 
-filename = 'soccer.json'
+filename = 'soccer.csv'
 f = open(filenmane, 'W')
 
 
 for games in soccer_items
-    matchday = game.find('div', class_="imspo_mt_cmd")
+    game_table = games.find_all('table', class_="KAIX8d")
 
-    f.write(matchday + ': {')
+    for data in game_table
+        matchday = data.find('div', class_="imspo_mt_cmd").span
+        team_row = data.find_all('tr', class_="L5Kkcd")
+        home_team_row = team_row[0]
+        away_team_row = team_row[1]
+
+        for teams in team_row
+
