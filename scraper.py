@@ -1,30 +1,29 @@
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup as bs
 from urllib.request import Request, urlopen
+from collections import defaultdict
 
-url_to_scrape = Request(
-    "https://www.google.com/search?q=premier+leage+scores&rlz=1C1ASUM_enUS865US865&oq=premier+leage+scores&aqs=chrome..69i57j0i10i131i433i457j0i10j0i10i395l7.8842j1j7&sourceid=chrome&ie=UTF-8#sie=lg;/g/11j4y8fvpd;2;/m/02_tc;mt;fp;1;;",
+
+soccer_dict = defaultdict(list)
+
+r = Request(
+    "https://www.skysports.com/premier-league-results",
     headers={"User-Agent": "Mozilla/5.0"},
 )
-
-request_page = urlopen(url_to_scrape)
+request_page = urlopen(r)
 page_html = request_page.read()
 request_page.close()
-
-html_soup = BeautifulSoup(page_html, "html.parser")
-
-soccer_items = html_soup.find_all("div", class_="OcbAbf")
-
+soup = bs(page_html, "html.parser")
 
 # filename = "soccer.csv"
 # f = open(filename, "W")
 
 
-for games in soccer_items:
-    game_table = games.find_all("table", class_="KAIX8d")
+for games in soup.find_all("h4", class_="fixres__header2"):
 
-    for data in game_table:
-        matchday = data.find("div", class_="imspo_mt_cmd").span
-        team_row = data.find_all("tr", class_="L5Kkcd")
-        home_team_row = team_row[0]
-        away_team_row = team_row[1]
-        print(matchday)
+    sibling = games.nextSibling
+    while sibling is not None and sibling.name != "h4":
+        if sibling.name == "div":
+            soccer_dict[games.text].append(sibling)
+        sibling = sibling.nextSibling
+
+print(soccer_dict)
