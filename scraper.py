@@ -1,7 +1,10 @@
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
-url_to_scrape = "https://www.google.com/search?q=premier+leage+scores&rlz=1C1ASUM_enUS865US865&oq=premier+leage+scores&aqs=chrome..69i57j0i10i131i433i457j0i10j0i10i395l7.8842j1j7&sourceid=chrome&ie=UTF-8#sie=lg;/g/11j4y8fvpd;2;/m/02_tc;mt;fp;1;;"
+url_to_scrape = Request(
+    "https://www.google.com/search?q=premier+leage+scores&rlz=1C1ASUM_enUS865US865&oq=premier+leage+scores&aqs=chrome..69i57j0i10i131i433i457j0i10j0i10i395l7.8842j1j7&sourceid=chrome&ie=UTF-8#sie=lg;/g/11j4y8fvpd;2;/m/02_tc;mt;fp;1;;",
+    headers={"User-Agent": "Mozilla/5.0"},
+)
 
 request_page = urlopen(url_to_scrape)
 page_html = request_page.read()
@@ -11,8 +14,9 @@ html_soup = BeautifulSoup(page_html, "html.parser")
 
 soccer_items = html_soup.find_all("div", class_="OcbAbf")
 
-filename = "soccer.csv"
-f = open(filename, "W")
+
+# filename = "soccer.csv"
+# f = open(filename, "W")
 
 
 for games in soccer_items:
@@ -23,3 +27,4 @@ for games in soccer_items:
         team_row = data.find_all("tr", class_="L5Kkcd")
         home_team_row = team_row[0]
         away_team_row = team_row[1]
+        print(matchday)
