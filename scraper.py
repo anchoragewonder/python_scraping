@@ -1,11 +1,10 @@
 from bs4 import BeautifulSoup as bs
 from urllib.request import Request, urlopen
-from collections import defaultdict
 import json
 
 soccer_data = {}
 soccer_data["matches"] = []
-soccer_dict = defaultdict(list)
+
 
 r = Request(
     "https://www.skysports.com/premier-league-results",
@@ -16,7 +15,7 @@ page_html = request_page.read()
 request_page.close()
 soup = bs(page_html, "html.parser")
 
-# filename = "soccer.csv"
+# filename = "soccer.txt"
 # f = open(filename, "W")
 
 
@@ -43,8 +42,6 @@ for games in soup.find_all("h4", class_="fixres__header2"):
                     "score": {"ft": [homescore, awayscore]},
                 }
             )
-
-            soccer_dict[date].append(sibling)
         sibling = sibling.nextSibling
 
-print(soccer_data)
+print(json.dumps(soccer_data, indent=4))
