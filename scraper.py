@@ -39,7 +39,7 @@ for games in soup.find_all("h4", class_="fixres__header2"):
                     "date": games.text,
                     "team1": home_team.text,
                     "team2": away_team.text,
-                    "score": {"ft": [homescore, awayscore]},
+                    "score": [homescore, awayscore],
                 }
             )
         sibling = sibling.nextSibling
