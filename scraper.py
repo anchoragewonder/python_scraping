@@ -22,9 +22,9 @@ soup = bs(page_html, "html.parser")
 for games in soup.find_all("h3", class_="fixres__header1"):
 
     year = games.text
-    sibling = games.nextSibling
+    sibling = games.find_next_sibling("h4")
     sibling2 = sibling.nextSibling
-    month = sibling2.text
+    month = sibling.text
 
     while sibling2 is not None and sibling2.name != "h3":
         if sibling2.name == "div":
@@ -45,6 +45,8 @@ for games in soup.find_all("h3", class_="fixres__header1"):
                     "awayScore": away_score,
                 }
             )
+        elif sibling2.name == "h4":
+            month = sibling2.text
         sibling2 = sibling2.nextSibling
 
 print(json.dumps(soccer_data, indent=4))
