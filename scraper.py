@@ -19,29 +19,32 @@ soup = bs(page_html, "html.parser")
 # f = open(filename, "W")
 
 
-for games in soup.find_all("h4", class_="fixres__header2"):
+for games in soup.find_all("h3", class_="fixres__header1"):
 
-    date = games.text
+    year = games.text
     sibling = games.nextSibling
+    sibling2 = sibling.nextSibling
+    month = sibling2.text
 
-    while sibling is not None and sibling.name != "h4":
-        if sibling.name == "div":
+    while sibling2 is not None and sibling2.name != "h3":
+        if sibling2.name == "div":
 
-            home_team = sibling.find("span", class_="matches__participant--side1")
-            away_team = sibling.find("span", class_="matches__participant--side2")
-            score = sibling.find_all("span", class_="matches__teamscores-side")
+            home_team = sibling2.find("span", class_="matches__participant--side1")
+            away_team = sibling2.find("span", class_="matches__participant--side2")
+            score = sibling2.find_all("span", class_="matches__teamscores-side")
 
-            homescore = score[0].text
-            awayscore = score[1].text
+            home_score = score[0].text
+            away_score = score[1].text
 
             soccer_data["matches"].append(
                 {
-                    "date": games.text,
-                    "team1": home_team.text,
-                    "team2": away_team.text,
-                    "score": [homescore, awayscore],
+                    "date": month + year,
+                    "homeTeam": home_team.text,
+                    "awayTeam": away_team.text,
+                    "homeScore": home_score,
+                    "awayScore": away_score,
                 }
             )
-        sibling = sibling.nextSibling
+        sibling2 = sibling2.nextSibling
 
 print(json.dumps(soccer_data, indent=4))
