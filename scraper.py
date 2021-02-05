@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup as bs
 from urllib.request import Request, urlopen
 from datetime import datetime
+import requests
 import json
 import re
 
@@ -74,3 +75,7 @@ for games in soup.find_all("h3", class_="fixres__header1"):
 soccer_data["matches"].reverse()
 
 print(json.dumps(soccer_data, indent=4))
+# url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod"
+# x = requests.post(url, data=soccer_data)
+
+# print(x.text)
