@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup as bs
 from urllib.request import Request, urlopen
+from datetime import datetime
+import re
 import json
 
 fixture_data = {}
@@ -15,24 +17,39 @@ page_html = request_page.read()
 request_page.close()
 soup = bs(page_html, "html.parser")
 
-for games in soup.find_all("h4", class_="fixres__header2"):
+for games in soup.find_all("h3", class_="fixres__header1"):
 
-    date = games.text
-    sibling = games.nextSibling
+    year = games.text
+    sibling = games.find_next_sibling("h4")
+    sibling2 = sibling.nextSibling
+    month = sibling.text
 
-    while sibling is not None and sibling.name != "h4":
-        if sibling.name == "div":
+    month_simple = re.findall("\d+", month)
+    month_simple = f"{month_simple[0]:0>2}"
 
-            home_team = sibling.find("span", class_="matches__participant--side1")
-            away_team = sibling.find("span", class_="matches__participant--side2")
+    while sibling2 is not None and sibling.name != "h3":
+        if sibling2.name == "div":
+
+            home_team = sibling2.find("span", class_="matches__participant--side1")
+            home_team = re.sub("\s+", "", home_team.text).strip()
+            away_team = sibling2.find("span", class_="matches__participant--side2")
+            away_team = re.sub("\s+", "", away_team.text).strip()
+
+            date_object = month_simple + " " + year
+            new_date_object = datetime.strptime(date_object, "%d %B %Y")
+            formatted_date = new_date_object.strftime("%m/%d/%Y")
 
             fixture_data["matches"].append(
                 {
-                    "date": games.text,
-                    "team1": home_team.text,
-                    "team2": away_team.text,
+                    "date": formatted_date,
+                    "team1": home_team,
+                    "team2": away_team,
                 }
             )
-        sibling = sibling.nextSibling
+        elif sibling2.name == "h4":
+            month = sibling2.text
+            month_simple = re.findall("\d+", month)
+            month_simple = f"{month_simple[0]:0>2}"
+        sibling2 = sibling2.nextSibling
 
 print(json.dumps(fixture_data, indent=4))

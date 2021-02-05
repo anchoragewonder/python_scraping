@@ -71,4 +71,6 @@ for games in soup.find_all("h3", class_="fixres__header1"):
             month_simple = f"{month_simple[0]:0>2}"
         sibling2 = sibling2.nextSibling
 
+soccer_data["matches"].reverse()
+
 print(json.dumps(soccer_data, indent=4))
