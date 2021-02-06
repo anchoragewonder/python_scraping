@@ -29,7 +29,7 @@ for games in soup.find_all("h3", class_="fixres__header1"):
     month_simple = re.findall("\d+", month)
     month_simple = f"{month_simple[0]:0>2}"
 
-    while sibling2 is not None and sibling.name != "h3":
+    while sibling2 is not None and sibling2.name != "h3":
         if sibling2.name == "div":
 
             home_team = sibling2.find("span", class_="matches__participant--side1")
@@ -55,9 +55,8 @@ for games in soup.find_all("h3", class_="fixres__header1"):
         sibling2 = sibling2.nextSibling
 
 j_data = json.dumps(fixture_data)
-print(j_data)
 
-# url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod/update"
-# x = requests.post(url, data=j_data)
+url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod/update"
+x = requests.post(url, data=j_data)
 
-# print(x.text)
+print(x.text)
