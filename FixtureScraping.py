@@ -44,8 +44,8 @@ for games in soup.find_all("h3", class_="fixres__header1"):
             fixture_data["matches"].append(
                 {
                     "date": formatted_date,
-                    "team1": home_team,
-                    "team2": away_team,
+                    "homeTeam": home_team,
+                    "awayTeam": away_team,
                 }
             )
         elif sibling2.name == "h4":
@@ -54,5 +54,10 @@ for games in soup.find_all("h3", class_="fixres__header1"):
             month_simple = f"{month_simple[0]:0>2}"
         sibling2 = sibling2.nextSibling
 
-url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod/update"
-x = requests.post(url, data=fixture_data)
+j_data = json.dumps(fixture_data)
+print(j_data)
+
+# url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod/update"
+# x = requests.post(url, data=j_data)
+
+# print(x.text)

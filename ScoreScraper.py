@@ -72,9 +72,13 @@ for games in soup.find_all("h3", class_="fixres__header1"):
             month_simple = f"{month_simple[0]:0>2}"
         sibling2 = sibling2.nextSibling
 
+# rverse the order matches are listed in to start with the oldest date
 soccer_data["matches"].reverse()
 
+# convert json object to json string
+j_data = json.dumps(soccer_data)
+
 url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod/update"
-x = requests.post(url, data=soccer_data)
+x = requests.post(url, data=j_data)
 
 print(x.text)
