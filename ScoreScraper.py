@@ -74,8 +74,7 @@ for games in soup.find_all("h3", class_="fixres__header1"):
 
 soccer_data["matches"].reverse()
 
-print(json.dumps(soccer_data, indent=4))
-# url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod"
-# x = requests.post(url, data=soccer_data)
+url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod/update"
+x = requests.post(url, data=soccer_data)
 
-# print(x.text)
+print(x.text)

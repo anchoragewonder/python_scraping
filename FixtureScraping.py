@@ -1,7 +1,9 @@
+from urllib import request
 from bs4 import BeautifulSoup as bs
 from urllib.request import Request, urlopen
 from datetime import datetime
 import re
+import requests
 import json
 
 fixture_data = {}
@@ -52,4 +54,5 @@ for games in soup.find_all("h3", class_="fixres__header1"):
             month_simple = f"{month_simple[0]:0>2}"
         sibling2 = sibling2.nextSibling
 
-print(json.dumps(fixture_data, indent=4))
+url = "https://why92kpyh9.execute-api.us-east-1.amazonaws.com/Prod/update"
+x = requests.post(url, data=fixture_data)
